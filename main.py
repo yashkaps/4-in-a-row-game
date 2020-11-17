@@ -1,4 +1,4 @@
-# import tkinter as tk
+
 import numpy as np
 import pygame
 import sys
@@ -6,8 +6,11 @@ import sys
 ROW_COUNT = 6
 COL_COUNT = 7
 
-BLUE = (0,0,200)
+RED = (255,0,0)
+YELLOW = (255,255,0)
+BLUE = (0,0,255)
 BLACK = (0,0,0)
+colors = [BLACK, RED, YELLOW]
 
 
 def create_board():
@@ -41,7 +44,7 @@ def check_win(board):
             for j in range(4):
                 window = row[j:j+4]
                 if not np.any(window - piece):
-                    return "Player " + str(piece) + " is the winner!"
+                    return "Player " + str(piece) + " wins!!"
 
         # check win for each column
         for i in range(COL_COUNT):
@@ -50,7 +53,7 @@ def check_win(board):
             for j in range(3):
                 window = col[j:j+4]
                 if not np.any(window - piece):
-                    return "Player " + str(piece) + " is the winner!"
+                    return "Player " + str(piece) + " wins!!"
 
         # check win for the diagonals
         # offsets from -2 to 2
@@ -77,7 +80,7 @@ def draw_board(board):
     for c in range(COL_COUNT):
         for r in range(1,ROW_COUNT+1):
             pygame.draw.rect(screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE, SQUARESIZE, SQUARESIZE))
-            pygame.draw.circle(screen, BLACK, (c*SQUARESIZE + SQUARESIZE//2, r*SQUARESIZE + SQUARESIZE//2), RADIUS)
+            pygame.draw.circle(screen, colors[int(board[r-1][c])], (c*SQUARESIZE + SQUARESIZE//2, r*SQUARESIZE + SQUARESIZE//2), RADIUS)
 
 board = create_board()
 game_over = False
@@ -97,58 +100,54 @@ screen = pygame.display.set_mode(size)
 draw_board(board)
 pygame.display.update()
 
+myfont = pygame.font.SysFont("monospace", 75)
+
 while not game_over:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
+        if event.type == pygame.MOUSEMOTION:
+            pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
+            pygame.draw.circle(screen, RED if turn == 0 else YELLOW, (event.pos[0], SQUARESIZE//2), RADIUS)
+            pygame.display.update()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print()
+            # print(event.pos[0] // 100)
             # ask for player 1 input
-            # if turn == 0:
-            #     col = int(input("Player 1, make your selection (0-6): "))
-            #     while not is_valid_column(board, col):
-            #         col = int(input("Player 1, make your selection (0-6): "))
-            #     row = get_next_open_row(board, col)
-            #     drop_piece(board, row, col, 1)
+            if turn == 0:
+                # col = int(input("Player 1, make your selection (0-6): "))
+                col = event.pos[0] // SQUARESIZE
+                while not is_valid_column(board, col):
+                    col = int(input("Player 1, make your selection (0-6): "))
+                row = get_next_open_row(board, col)
+                drop_piece(board, row, col, 1)
             #
             # # ask for player 2 input
-            # else:
-            #     col = int(input("Player 2, make your selection (0-6): "))
-            #     while not is_valid_column(board, col):
-            #         col = int(input("Player 2, make your selection (0-6): "))
-            #     row = get_next_open_row(board, col)
-            #     drop_piece(board, row, col, 2)
-            #
-            # print(board)
-            #
-            # win = check_win(board)
-            # if win:
-            #     print(win)
-            #     game_over = True
-            #
-            # turn += 1
-            # turn = turn % 2
+            else:
+                # col = int(input("Player 2, make your selection (0-6): "))
+                col = event.pos[0] // SQUARESIZE
+                while not is_valid_column(board, col):
+                    col = int(input("Player 2, make your selection (0-6): "))
+                row = get_next_open_row(board, col)
+                drop_piece(board, row, col, 2)
 
-# HEIGHT = 500
-# WIDTH = 600
-#
-# root = tk.Tk()
-# root.minsize(WIDTH, HEIGHT)
-# root.title("Game")
-#
-# canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
-# canvas.pack()
-#
-# board_image = tk.PhotoImage(file='./board.png')
-# background_label = tk.Label(root, bg='#80c1ff')
-# background_label.place(x=0, y=0, relwidth=1, relheight=1)
-#
-# board = tk.Label(root, image=board_image, bd=5)
-# board.place(relx=0.5, rely=0.1, relwidth=0.8, relheight=0.8, anchor='n')
-#
-#
-#
-#
-# root.mainloop()
+            print(board)
+
+            win = check_win(board)
+            if win:
+                label = myfont.render(win, 1, (255,255,255))
+                screen.blit(label, (30,10))
+                # print(win)
+                game_over = True
+
+            turn += 1
+            turn = turn % 2
+
+            draw_board(board)
+            pygame.display.update()
+
+            if game_over:
+                pygame.time.wait(3000)
+
