@@ -67,7 +67,7 @@ def check_win(board):
 
         # check win for the diagonals
         # offsets from -2 to 2
-        for i in range(-2,2):
+        for i in range(-2,4):
             diag = np.diagonal(board,i)
             for j in range(len(diag)-3):
                 window = diag[j:j+4]
@@ -77,7 +77,7 @@ def check_win(board):
         # check win for the diagonals in the other direction
         # offsets from -2 to 2
         temp = np.flip(board.copy(), axis=1)
-        for i in range(-2, 2):
+        for i in range(-2, 4):
             diag = np.diagonal(temp, i)
             for j in range(len(diag) - 3):
                 window = diag[j:j + 4]
@@ -138,6 +138,49 @@ def score_position(board, piece):
             score += eval_window(window, piece)
 
     return score
+
+
+def is_terminal_node(board):
+    return (False if not check_win(board) else True) or len(get_valid_locs(board)) == 0
+
+
+def minimax(board, depth, maximizing_player):
+    valid_locs = get_valid_locs(board)
+    is_terminal = is_terminal_node(board)
+    if depth == 0 or is_terminal:
+        if is_terminal:
+            if check_win(board) == "Player 2 wins!!":
+                return None, 100000
+            elif check_win(board) == "Player 1 wins!!":
+                return None, -100000
+            else: # game over
+                return None, 0
+        else:
+            return None, score_position(board, AI_PIECE)
+    if maximizing_player:
+        score = -100000
+        col = random.choice(valid_locs)
+        for c in valid_locs:
+            r = get_next_open_row(board, c)
+            temp_board = board.copy()
+            drop_piece(temp_board, r, c, AI_PIECE)
+            new_score = minimax(temp_board, depth-1, False)[1]
+            if new_score > score:
+                score = new_score
+                col = c
+        return col, score
+    else:
+        score = 100000
+        col = random.choice(valid_locs)
+        for c in valid_locs:
+            r = get_next_open_row(board, c)
+            temp_board = board.copy()
+            drop_piece(temp_board, r, c, PLAYER_PIECE)
+            new_score = minimax(temp_board, depth-1, True)[1]
+            if new_score < score:
+                score = new_score
+                col = c
+        return col, score
 
 
 def get_valid_locs(board):
@@ -225,7 +268,8 @@ while not game_over:
     ## AI turn
     if turn == AI and not game_over:
         # col = random.randint(0, COL_COUNT - 1)
-        col = pick_best_move(board, AI_PIECE)
+        # col = pick_best_move(board, AI_PIECE)
+        col, minimax_score = minimax(board, 3, True)
         while not is_valid_column(board, col):
             col = pick_best_move(board, AI_PIECE)
 
@@ -243,7 +287,7 @@ while not game_over:
         turn += 1
         turn = turn % 2
 
-        pygame.time.wait(300)
+        # pygame.time.wait(300)
         draw_board(board)
         pygame.display.update()
 
