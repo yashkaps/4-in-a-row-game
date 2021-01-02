@@ -114,19 +114,16 @@ while not game_over:
             pygame.display.update()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # print(event.pos[0] // 100)
             # ask for player 1 input
             if turn == 0:
-                # col = int(input("Player 1, make your selection (0-6): "))
                 col = event.pos[0] // SQUARESIZE
                 while not is_valid_column(board, col):
                     col = int(input("Player 1, make your selection (0-6): "))
                 row = get_next_open_row(board, col)
                 drop_piece(board, row, col, 1)
-            #
+
             # # ask for player 2 input
             else:
-                # col = int(input("Player 2, make your selection (0-6): "))
                 col = event.pos[0] // SQUARESIZE
                 while not is_valid_column(board, col):
                     col = int(input("Player 2, make your selection (0-6): "))
@@ -139,7 +136,6 @@ while not game_over:
             if win:
                 label = myfont.render(win, 1, (255,255,255))
                 screen.blit(label, (30,10))
-                # print(win)
                 game_over = True
 
             turn += 1
@@ -150,4 +146,3 @@ while not game_over:
 
             if game_over:
                 pygame.time.wait(3000)
-
