@@ -17,5 +17,4 @@ The game is made using Python's Pygame library, with Numpy arrays used for stori
 ## Possible improvements
 - Graphics aren't exactly the best and there's definitely room for improvement
 - I didn't use alpha-beta pruning so the AI isn't the most efficient (not really a problem for depth <=4)
-- AI only considers a few factors (center column has higher weight, 3-in-a-row, 4-in-a-row); could add some more things to scoring function
-- Weights were based on intuition and not generated using a machine learning algorithm, so they aren't the most optimal
+- Could add some more things to scoring function
