@@ -14,7 +14,7 @@ An AI has been implemented, which uses the Minimax algorithm with a depth of 3. 
 ## Additional info
 The game is made using Python's Pygame library, with Numpy arrays used for storing board states for efficiency. 
 
-## Possible improvements
+## Possible improvements (might implement these in the future)
 - Graphics aren't exactly the best and there's definitely room for improvement
 - I didn't use alpha-beta pruning so the AI isn't the most efficient (not really a problem for depth <=4)
 - Could add some more things to scoring function
