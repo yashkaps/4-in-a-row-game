@@ -1,4 +1,4 @@
-# 4-in-a-row-game
+# 4-in-a-row game (also called connect-4)
 Aiming to implement an AI that can play the board game 4-in-a-row
 
 ## Update
