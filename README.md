@@ -1,5 +1,5 @@
 # 4-in-a-row game (also called connect-4)
-Aiming to implement an AI that can play the board game 4-in-a-row
+Implementing the board game connect-4
 
 ## Update
 As of the latest commit, 2 player mode is already implemented, and works as intended. AI not yet implemented.
@@ -18,3 +18,4 @@ The game is made using Python's Pygame library, with Numpy arrays used for stori
 - Graphics aren't exactly the best and there's definitely room for improvement
 - I didn't use alpha-beta pruning so the AI isn't the most efficient (not really a problem for depth <=4)
 - Could add some more things to scoring function
+- Bundling both single player and 2 player modes into a single executable
